@@ -1,0 +1,109 @@
+---
+/**
+ * Sitedeki tüm logo kullanımlarının tek kaynağı (header, mobil menü, açılış, footer).
+ *
+ * GERÇEK LOGO GELDİĞİNDE:
+ *   1. SVG dosyalarını src/assets/logo/ altına koyun (ör. logo-yatay.svg, logo-isaret.svg).
+ *   2. Aşağıdaki iki import satırını açın, altındaki iki "= null" satırını silin. Başka dosyaya dokunmayın.
+ *
+ * Boyut her zaman yükseklikten gelir (--logo-h); genişlik dosyanın oranına göre kendiliğinden ayarlanır.
+ * Böylece yerleşim geçici monogramın ölçülerine bağlı değildir.
+ */
+import type { ImageMetadata } from 'astro';
+import { site } from '../data/site';
+import Monogram from './Monogram.astro';
+
+// import lockupAsset from '../assets/logo/logo-yatay.svg';
+// import markAsset from '../assets/logo/logo-isaret.svg';
+const lockupAsset = null as ImageMetadata | null;
+const markAsset = null as ImageMetadata | null;
+
+interface Props {
+  /** lockup: işaret + yazı (header) · mark: yalnız işaret · stacked: ortalanmış dikey (açılış) */
+  variant?: 'lockup' | 'mark' | 'stacked';
+  class?: string;
+}
+const { variant = 'lockup', class: cls = '' } = Astro.props;
+const asset = variant === 'mark' ? markAsset : lockupAsset;
+---
+
+{
+  asset ? (
+    <img class:list={['logo', `logo--${variant}`, 'logo--asset', cls]} src={asset.src} alt="" width={asset.width} height={asset.height} />
+  ) : (
+    <span class:list={['logo', `logo--${variant}`, cls]} aria-hidden="true">
+      <Monogram class="logo__mark" />
+      {variant !== 'mark' && (
+        <span class="logo__word">
+          <span class="logo__name">{site.short}</span>
+          <span class="logo__sub">İç Mimarlık</span>
+        </span>
+      )}
+    </span>
+  )
+}
+
+<style>
+  .logo {
+    --logo-h: 2.25rem;
+    display: inline-flex;
+    align-items: center;
+    gap: calc(var(--logo-h) * 0.32);
+    height: var(--logo-h);
+    color: inherit;
+    line-height: 1;
+    flex: none;
+  }
+  .logo--asset {
+    width: auto;
+    height: var(--logo-h);
+  }
+  .logo :global(.logo__mark) {
+    font-size: calc(var(--logo-h) * 0.9);
+  }
+  .logo__word {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: calc(var(--logo-h) * 0.12);
+  }
+  .logo__name {
+    font-family: var(--serif);
+    font-size: calc(var(--logo-h) * 0.58);
+    letter-spacing: -0.01em;
+  }
+  .logo__sub {
+    font-size: calc(var(--logo-h) * 0.27);
+    letter-spacing: 0.26em;
+    text-transform: uppercase;
+  }
+
+  .logo--stacked {
+    --logo-h: 7rem;
+    flex-direction: column;
+    height: auto;
+    gap: 0.9rem;
+  }
+  .logo--stacked :global(.logo__mark) {
+    font-size: 3.4rem;
+  }
+  .logo--stacked .logo__word {
+    align-items: center;
+    gap: 0.35rem;
+  }
+  .logo--stacked .logo__name {
+    font-size: 1.15rem;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    padding-left: 0.32em;
+  }
+  .logo--stacked .logo__sub {
+    font-size: 0.6rem;
+    letter-spacing: 0.34em;
+    padding-left: 0.34em;
+    color: var(--ink-muted);
+  }
+  .logo--asset.logo--stacked {
+    height: 5rem;
+  }
+</style>

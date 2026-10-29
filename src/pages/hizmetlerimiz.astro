@@ -1,0 +1,105 @@
+---
+import Arrow from '../components/Arrow.astro';
+import Index from '../components/Index.astro';
+import Lines from '../components/Lines.astro';
+import Media from '../components/Media.astro';
+import PageIntro from '../components/PageIntro.astro';
+import ServicesExplorer from '../components/ServicesExplorer.astro';
+import Base from '../layouts/Base.astro';
+import { principles } from '../data/site';
+import turnkey from '../assets/projeler/yapi-showroom/05.webp';
+---
+
+<Base
+  title="Hizmetler"
+  description="Konut ve ticari iç mekân tasarımı, uygulama ve proje yönetimi, mobilya ve özel üretim. Sakarya Serdivan merkezli, Türkiye geneli hizmet."
+>
+  <PageIntro
+    no="01"
+    label="Hizmetler"
+    lines={['Sizin için', 'tasarlanan', '<em>hizmetler.</em>']}
+    lead="Konut ve ticari iç mekân tasarımından anahtar teslim uygulamaya, mekâna özel mobilyaya kadar; projenizin büyüklüğü ne olursa olsun size özel çözümler sunuyoruz."
+  />
+
+  <section class="section svc-page" aria-label="Hizmet alanları">
+    <ServicesExplorer detailed />
+  </section>
+
+  <section class="turnkey section on-dark" aria-labelledby="turnkey-title">
+    <div class="grid">
+      <div class="turnkey__text">
+        <Index no="02" label="Anahtar teslim" />
+        <Lines as="h2" id="turnkey-title" class="h2 turnkey__title" lines={['Siz onay verin,', '<em>gerisi bizde.</em>']} />
+        <p class="muted">
+          Konsept tasarımdan teknik projeye, malzeme tedarikinden tadilata, mobilya üretimi ve montaja kadar tüm süreci
+          tek elden yönetiyoruz. Koordinasyon, ustalar ve takvim bizim sorumluluğumuzdadır.
+        </p>
+        <ol role="list" class="turnkey__list">
+          {
+            principles.map((p, i) => (
+              <li>
+                <span class="coral">{String(i + 1).padStart(2, '0')}</span>
+                {p}
+              </li>
+            ))
+          }
+        </ol>
+        <a href="/surecimiz" class="link small">Nasıl çalıştığımızı görün <Arrow /></a>
+      </div>
+      <Media
+        class="turnkey__img"
+        src={turnkey}
+        alt="Yapı Showroom: koyu damarlı mermer ada ve aydınlatılmış duvar nişleri"
+        sizes="(min-width: 1024px) 45vw, 100vw"
+        ratio="4 / 5"
+      />
+    </div>
+  </section>
+</Base>
+
+<style>
+  .svc-page {
+    padding-top: var(--space-m);
+  }
+  .turnkey .grid {
+    row-gap: var(--space-l);
+    align-items: center;
+  }
+  .turnkey__text {
+    grid-column: 1 / span 5;
+    display: grid;
+    gap: var(--space-s);
+    justify-items: start;
+  }
+  .turnkey :global(.turnkey__title) {
+    margin-block: var(--space-xs) var(--space-xs);
+  }
+  .turnkey :global(.turnkey__title em) {
+    font-style: italic;
+    font-weight: 200;
+  }
+  .turnkey__list {
+    display: grid;
+    width: 100%;
+    margin-block: var(--space-xs);
+  }
+  .turnkey__list li {
+    display: flex;
+    gap: 1.25rem;
+    padding-block: 0.9rem;
+    border-top: 1px solid var(--line-dark);
+  }
+  .turnkey__list .coral {
+    font-family: var(--serif);
+  }
+  .turnkey :global(.turnkey__img) {
+    grid-column: 7 / -1;
+    margin-right: calc(var(--gutter) * -1);
+  }
+  @media (max-width: 1023px) {
+    .turnkey__text,
+    .turnkey :global(.turnkey__img) {
+      grid-column: 1 / -1;
+    }
+  }
+</style>

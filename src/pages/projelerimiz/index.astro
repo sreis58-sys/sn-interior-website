@@ -1,0 +1,163 @@
+---
+import { getCollection } from 'astro:content';
+import PageIntro from '../../components/PageIntro.astro';
+import ProjectFigure from '../../components/ProjectFigure.astro';
+import Base from '../../layouts/Base.astro';
+
+const projects = (await getCollection('projeler')).sort((a, b) => a.data.order - b.data.order);
+const cats = ['Konut', 'Ticari'] as const;
+
+/* Üç farklı satır kurgusu sırayla tekrar eder: geniş yatay → dar dikey → büyük kırpma */
+const variants = [
+  { cls: 'row--wide', ratio: '16 / 10', sizes: '(min-width: 1024px) 66vw, 100vw', from: 'left' as const },
+  { cls: 'row--tall', ratio: '4 / 5', sizes: '(min-width: 1024px) 40vw, 90vw', from: 'bottom' as const },
+  { cls: 'row--crop', ratio: '21 / 9', sizes: '(min-width: 1024px) 84vw, 100vw', from: 'right' as const },
+];
+---
+
+<Base
+  title="Projeler"
+  description="Sulenur İç Mimarlık'ın konut ve ticari iç mimarlık projeleri: tasarım, 3D görselleştirme ve uygulama."
+>
+  <PageIntro
+    no="01"
+    label="Projeler"
+    lines={['Hayata', 'geçirdiğimiz', '<em>mekânlar.</em>']}
+    lead="Her biri özenle tasarlanmış, yaşam kalitesini artırmak için kurgulanmış projelerimizden bir seçki."
+  >
+    <div class="filters" data-filters="#proje-listesi" role="group" aria-label="Projeleri filtrele">
+      <button type="button" data-filter="all" aria-pressed="true">Tümü <sup>{projects.length}</sup></button>
+      {
+        cats.map((c) => (
+          <button type="button" data-filter={c} aria-pressed="false">
+            {c} <sup>{projects.filter((p) => p.data.category === c).length}</sup>
+          </button>
+        ))
+      }
+      <span class="filters__indicator" aria-hidden="true"></span>
+    </div>
+  </PageIntro>
+
+  <section class="list" id="proje-listesi" aria-label="Proje listesi">
+    <p class="sr-only" aria-live="polite" data-filter-status></p>
+    {
+      projects.map((p, i) => {
+        const v = variants[i % variants.length];
+        return (
+          <div class:list={['row grid', v.cls]} data-category={p.data.category}>
+            <ProjectFigure
+              project={p}
+              no={String(i + 1).padStart(2, '0')}
+              ratio={v.ratio}
+              sizes={v.sizes}
+              from={v.from}
+              headingLevel="h2"
+              showSummary
+              class="row__fig"
+            />
+          </div>
+        );
+      })
+    }
+    <p class="list__note wrap micro muted">
+      Yeni projeler eklendikçe bu sayfa güncellenir. Tamamlanan işlerimizi yerinde görmek için bize ulaşabilirsiniz.
+    </p>
+  </section>
+</Base>
+
+<style>
+  .filters {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 2rem;
+    margin-top: var(--space-m);
+    border-bottom: 1px solid var(--line);
+  }
+  .filters button {
+    min-height: 44px;
+    font-size: var(--fs-small);
+    font-weight: 500;
+    color: var(--ink-muted);
+    transition: color var(--dur-1) var(--ease);
+  }
+  .filters button[aria-pressed='true'] {
+    color: var(--ink);
+  }
+  .filters sup {
+    font-family: var(--serif);
+    color: var(--coral);
+    margin-left: 0.15rem;
+  }
+  .filters__indicator {
+    position: absolute;
+    left: 0;
+    bottom: -1px;
+    height: 1px;
+    width: var(--iw, 0px);
+    background: var(--coral);
+    transform: translateX(var(--ix, 0px));
+    transition:
+      transform var(--dur-2) var(--ease),
+      width var(--dur-2) var(--ease);
+  }
+
+  .list {
+    position: relative;
+    display: grid;
+    gap: var(--space-section);
+    padding-block: var(--space-m) var(--space-section);
+  }
+  .row {
+    position: relative;
+  }
+  .row[hidden] {
+    display: none;
+  }
+  :global(.is-filtered-in) {
+    animation: filter-in var(--dur-2) var(--ease) both;
+  }
+  @keyframes filter-in {
+    from {
+      opacity: 0;
+      transform: translateY(1rem);
+    }
+  }
+  .row--wide :global(.row__fig) {
+    grid-column: 1 / span 8;
+    margin-left: calc(var(--gutter) * -1);
+  }
+  .row--wide :global(.row__fig .pf__cap) {
+    padding-left: var(--gutter);
+  }
+  .row--tall :global(.row__fig) {
+    grid-column: 7 / span 5;
+  }
+  .row--crop :global(.row__fig) {
+    grid-column: 3 / -1;
+    margin-right: calc(var(--gutter) * -1);
+  }
+  .row--crop :global(.row__fig .pf__cap) {
+    padding-right: var(--gutter);
+  }
+  .list__note {
+    max-width: 40rem;
+  }
+  @media (max-width: 1023px) {
+    .row--wide :global(.row__fig),
+    .row--crop :global(.row__fig) {
+      grid-column: 1 / -1;
+    }
+    .row--tall :global(.row__fig) {
+      grid-column: 3 / -1;
+    }
+    .row--crop :global(.media) {
+      aspect-ratio: 4 / 3 !important;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    :global(.is-filtered-in) {
+      animation: none;
+    }
+  }
+</style>

@@ -1,0 +1,15 @@
+---
+/* Bölüm numarası: (02) — Projeler */
+interface Props {
+  no: string;
+  label: string;
+  class?: string;
+}
+const { no, label, class: cls = '' } = Astro.props;
+---
+
+<p class:list={['index', cls]}>
+  <span class="index__no">({no})</span>
+  <span class="index__line" aria-hidden="true"></span>
+  <span>{label}</span>
+</p>

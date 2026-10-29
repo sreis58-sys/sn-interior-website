@@ -1,0 +1,135 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import Arrow from './Arrow.astro';
+import Media from './Media.astro';
+
+interface Props {
+  project: CollectionEntry<'projeler'>;
+  no: string;
+  ratio: string;
+  sizes: string;
+  class?: string;
+  position?: string;
+  from?: 'bottom' | 'left' | 'right';
+  delay?: number;
+  headingLevel?: 'h2' | 'h3';
+  showSummary?: boolean;
+}
+
+const {
+  project,
+  no,
+  ratio,
+  sizes,
+  class: cls = '',
+  position,
+  from,
+  delay,
+  headingLevel: H = 'h3',
+  showSummary = false,
+} = Astro.props;
+const { title, category, location, year, cover, coverAlt, summary } = project.data;
+---
+
+<a href={`/projelerimiz/${project.id}`} class:list={['pf', cls]} data-cursor="Projeyi gör" data-category={category}>
+  <Media
+    src={cover}
+    alt={coverAlt}
+    sizes={sizes}
+    ratio={ratio}
+    position={position}
+    from={from}
+    delay={delay}
+    vtName={`p-${project.id}`}
+  />
+  <div class="pf__cap">
+    <span class="pf__no">{no}</span>
+    <div class="pf__text">
+      <H class="pf__title">{title}</H>
+      <p class="pf__meta micro muted"><span>{category}</span><span>{year}</span><span class="pf__loc">{location}</span></p>
+      {showSummary && <p class="pf__summary small muted">{summary}</p>}
+    </div>
+    <Arrow class="pf__arrow" />
+  </div>
+</a>
+
+<style>
+  .pf {
+    display: block;
+    position: relative;
+  }
+  .pf__cap {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: start;
+    gap: 1rem;
+    padding-top: 1rem;
+  }
+  .pf__no {
+    font-family: var(--serif);
+    font-size: 0.95rem;
+    color: var(--coral);
+    padding-top: 0.35rem;
+    min-width: 1.8rem;
+  }
+  .pf__title {
+    font-size: var(--fs-h4);
+    line-height: 1.1;
+    transition: transform 700ms var(--ease);
+  }
+  .pf__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 0.6rem;
+    margin-top: 0.5rem;
+  }
+  .pf__meta span {
+    white-space: nowrap;
+  }
+  .pf__meta span + span::before {
+    content: '·';
+    margin-right: 0.6rem;
+  }
+  .pf__cap {
+    min-height: 44px;
+    container-type: inline-size;
+  }
+  @container (max-width: 26rem) {
+    .pf__loc {
+      flex-basis: 100%;
+    }
+    .pf__loc::before {
+      display: none;
+    }
+  }
+  .pf__summary {
+    margin-top: 0.75rem;
+    max-width: 28rem;
+  }
+  .pf :global(.pf__arrow) {
+    margin-top: 0.55rem;
+    width: 1.5rem;
+    transition: transform 700ms var(--ease);
+  }
+  .pf :global(.media img) {
+    transition: transform 700ms var(--ease);
+  }
+  :global(html.js) .pf :global(.media:not(.is-in) img) {
+    transition: transform calc(var(--dur-3) + 400ms) var(--ease);
+  }
+  @media (hover: hover) {
+    .pf:hover :global(.media.is-in img),
+    :global(html:not(.js)) .pf:hover :global(.media img) {
+      transform: scale(1.035) translateX(-0.6%);
+    }
+    .pf:hover .pf__title {
+      transform: translateX(0.4rem);
+    }
+    .pf:hover :global(.pf__arrow) {
+      transform: translateX(6px);
+    }
+  }
+  .pf:focus-visible {
+    outline-offset: 6px;
+  }
+</style>

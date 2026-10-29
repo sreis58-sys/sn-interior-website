@@ -1,0 +1,59 @@
+---
+import Index from './Index.astro';
+import Lines from './Lines.astro';
+
+interface Props {
+  no: string;
+  label: string;
+  lines: string[];
+  lead?: string;
+  size?: 'h1' | 'display';
+  class?: string;
+}
+const { no, label, lines, lead, size = 'h1', class: cls = '' } = Astro.props;
+---
+
+<section class:list={['pi grid', cls]}>
+  <Index no={no} label={label} class="pi__index" />
+  <Lines as="h1" class={`${size} pi__title`} lines={lines} />
+  {lead && <p class="pi__lead lead">{lead}</p>}
+  <div class="pi__extra"><slot /></div>
+</section>
+
+<style>
+  .pi {
+    padding-top: calc(var(--header-h) + var(--space-l));
+    padding-bottom: var(--space-m);
+    row-gap: var(--space-m);
+    align-items: end;
+  }
+  .pi :global(.pi__index) {
+    grid-column: 1 / -1;
+  }
+  .pi :global(.pi__title) {
+    grid-column: 1 / span 8;
+  }
+  .pi :global(.pi__title em) {
+    font-style: italic;
+    font-weight: 200;
+  }
+  .pi__lead {
+    grid-column: 8 / span 5;
+    max-width: 30rem;
+    color: var(--ink-muted);
+  }
+  .pi__extra {
+    grid-column: 1 / -1;
+  }
+  .pi__extra:empty {
+    display: none;
+  }
+  @media (max-width: 1023px) {
+    .pi :global(.pi__title) {
+      grid-column: 1 / -1;
+    }
+    .pi__lead {
+      grid-column: 1 / -1;
+    }
+  }
+</style>

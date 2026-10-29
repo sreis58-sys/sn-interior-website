@@ -1,0 +1,104 @@
+---
+import { process } from '../data/site';
+---
+
+<div class="pt" data-step-track>
+  <span class="pt__rail" aria-hidden="true"><span class="pt__fill"></span></span>
+  <ol role="list" class="pt__list">
+  {
+    process.map((s) => (
+      <li class="pt__step" data-step>
+        <span class="pt__no">{s.no}</span>
+        <div class="pt__body">
+          <h3 class="pt__title">{s.title}</h3>
+          <p class="pt__meta micro">{s.meta}</p>
+          <p class="pt__text">{s.text}</p>
+        </div>
+      </li>
+    ))
+  }
+  </ol>
+</div>
+
+<style>
+  .pt {
+    position: relative;
+    padding-left: clamp(1.5rem, 3vw, 3rem);
+  }
+  .pt__list {
+    display: grid;
+    gap: clamp(2.5rem, 1.5rem + 4vw, 5.5rem);
+  }
+  .pt__rail {
+    position: absolute;
+    left: 0;
+    top: 0.6rem;
+    bottom: 0.6rem;
+    width: 1px;
+    background: var(--line-dark);
+  }
+  .pt__fill {
+    position: absolute;
+    inset: 0;
+    background: var(--coral);
+    transform-origin: top;
+    transform: scaleY(var(--progress, 0));
+  }
+  .pt__step {
+    display: grid;
+    grid-template-columns: clamp(4rem, 8vw, 7.5rem) 1fr;
+    gap: var(--col-gap);
+    align-items: start;
+    transition: opacity var(--dur-2) var(--ease);
+  }
+  :global(html.js) .pt__step {
+    opacity: 0.45;
+  }
+  :global(html.js) .pt__step.is-past {
+    opacity: 0.7;
+  }
+  :global(html.js) .pt__step.is-active {
+    opacity: 1;
+  }
+  .pt__no {
+    font-family: var(--serif);
+    font-weight: 200;
+    font-size: clamp(2.8rem, 1.5rem + 4vw, 6rem);
+    line-height: 0.85;
+    letter-spacing: -0.04em;
+    font-variant-numeric: lining-nums;
+  }
+  .pt__step.is-active .pt__no {
+    color: var(--stone);
+  }
+  .pt__title {
+    font-size: var(--fs-h3);
+  }
+  .pt__meta {
+    margin-top: 0.9rem;
+    color: var(--coral);
+  }
+  .pt__text {
+    margin-top: 1rem;
+    max-width: 32rem;
+    color: var(--on-dark-muted);
+  }
+  @media (max-width: 767px) {
+    .pt__step {
+      grid-template-columns: 1fr;
+      gap: 0.75rem;
+    }
+    .pt__no {
+      font-size: 2.6rem;
+    }
+  }
+  @media (prefers-reduced-motion: reduce), (max-width: 767px) {
+    :global(html.js) .pt__step,
+    :global(html.js) .pt__step.is-past {
+      opacity: 1;
+    }
+    .pt__step.is-active .pt__no {
+      color: inherit;
+    }
+  }
+</style>

@@ -1,0 +1,219 @@
+---
+import { legal, nav, site } from '../data/site';
+import Arrow from './Arrow.astro';
+import Curve from './Curve.astro';
+import Lines from './Lines.astro';
+import Logo from './Logo.astro';
+
+interface Props {
+  cta?: boolean;
+}
+const { cta = true } = Astro.props;
+const year = new Date().getFullYear();
+---
+
+<footer class:list={['ftr on-dark', !cta && 'ftr--compact']}>
+  <Logo variant="mark" class="ftr__ghost" />
+  <Curve
+    class="ftr__curve"
+    viewBox="0 0 1000 400"
+    d="M-20 380 C 180 360, 300 120, 520 140 S 860 330, 1020 40"
+  />
+
+  {
+    cta && (
+  <div class="grid ftr__top">
+    <p class="index ftr__index">
+      <span class="index__no">(—)</span>
+      <span class="index__line" aria-hidden="true"></span>
+      <span>Yeni bir proje</span>
+    </p>
+    <p class="ftr__note muted small">
+      İlk görüşme ve keşif ücretsizdir, bağlayıcılığı yoktur. Mekânınızı ve beklentilerinizi dinleyerek başlıyoruz.
+    </p>
+
+    <Lines as="h2" class="ftr__title" lines={['Birlikte', '<em>tasarlayalım.</em>']} />
+
+    <a href="/iletisim" class="cta ftr__cta">
+      <span class="cta__circle"><Arrow /></span>
+      <span>Projenizi konuşalım</span>
+    </a>
+  </div>
+    )
+  }
+
+  <div class="grid ftr__info">
+    <div class="ftr__contact">
+      <a class="ftr__mail link" href={`mailto:${site.email}`}>{site.email}</a>
+      <div class="ftr__lines small">
+        <a class="link" href={site.phoneHref}>{site.phone}</a>
+        <a class="link" href={site.whatsapp} rel="noopener" target="_blank">WhatsApp</a>
+        <span class="muted">{site.city}</span>
+      </div>
+    </div>
+
+    <nav class="ftr__nav small" aria-label="Alt menü">
+      <ul role="list">
+        <li><a class="link link--quiet" href="/">Ana Sayfa</a></li>
+        {
+          nav.map((l) => (
+            <li>
+              <a class="link link--quiet" href={l.href}>
+                {l.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <ul role="list" class="ftr__legal small">
+      {
+        legal.map((l) => (
+          <li>
+            <a class="link link--quiet" href={l.href}>
+              {l.label}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+
+  <div class="ftr__bottom wrap micro">
+    <span>© {year} {site.name}</span>
+    <span class="ftr__motto">Mekân insanla tamamlanır.</span>
+  </div>
+</footer>
+
+<style>
+  .ftr {
+    position: relative;
+    overflow: hidden;
+    padding-top: var(--space-section-l);
+    isolation: isolate;
+  }
+  .ftr :global(.ftr__ghost) {
+    position: absolute;
+    --logo-h: 40vw;
+    right: -4vw;
+    bottom: -6vw;
+    color: rgb(244 239 234 / 0.035);
+    z-index: -1;
+  }
+  /* gerçek logo dosyası kullanıldığında: açık renge çevrilip çok soluk gösterilir */
+  .ftr :global(img.ftr__ghost) {
+    filter: invert(1);
+    opacity: 0.04;
+  }
+  .ftr :global(.ftr__curve) {
+    left: 0;
+    top: 18%;
+    width: 100%;
+    height: 48%;
+    z-index: -1;
+  }
+
+  .ftr__top {
+    row-gap: var(--space-m);
+    align-items: end;
+  }
+  .ftr__index {
+    grid-column: 1 / span 6;
+  }
+  .ftr__note {
+    grid-column: 9 / -1;
+    max-width: 26rem;
+  }
+  .ftr :global(.ftr__title) {
+    grid-column: 1 / -1;
+    font-size: clamp(3.1rem, 0.8rem + 13vw, 15.5rem);
+    line-height: 0.86;
+    letter-spacing: -0.04em;
+  }
+  .ftr :global(.ftr__title .line:nth-child(2)) {
+    padding-left: 12vw;
+  }
+  .ftr :global(.ftr__title em) {
+    font-style: italic;
+    font-weight: 200;
+  }
+  .ftr__cta {
+    grid-column: 9 / -1;
+    margin-top: calc(var(--space-l) * -1);
+    justify-self: start;
+  }
+
+  .ftr--compact .ftr__info {
+    margin-top: 0;
+    border-top: 0;
+  }
+  .ftr__info {
+    margin-top: var(--space-l);
+    padding-top: var(--space-m);
+    border-top: 1px solid var(--line-dark);
+    row-gap: var(--space-m);
+  }
+  .ftr__contact {
+    grid-column: 1 / span 6;
+    display: grid;
+    gap: 1rem;
+  }
+  .ftr__mail {
+    justify-self: start;
+    font-family: var(--serif);
+    font-size: var(--fs-h4);
+    font-weight: 300;
+    word-break: break-all;
+  }
+  .ftr__lines {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.75rem;
+    align-items: center;
+  }
+  .ftr__nav {
+    grid-column: 8 / span 2;
+  }
+  .ftr__legal {
+    grid-column: 10 / span 3;
+  }
+  .ftr__nav ul,
+  .ftr__legal {
+    display: grid;
+    gap: 0.15rem;
+    justify-items: start;
+    align-content: start;
+  }
+
+  .ftr__bottom {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.5rem 2rem;
+    margin-top: var(--space-l);
+    padding-block: var(--space-s);
+    color: var(--on-dark-muted);
+  }
+
+  @media (max-width: 860px) {
+    .ftr__index,
+    .ftr__note,
+    .ftr__cta,
+    .ftr__contact {
+      grid-column: 1 / -1;
+    }
+    .ftr__cta {
+      margin-top: 0;
+    }
+    .ftr :global(.ftr__title .line:nth-child(2)) {
+      padding-left: 0;
+    }
+    .ftr__nav {
+      grid-column: 1 / span 6;
+    }
+    .ftr__legal {
+      grid-column: 7 / span 6;
+    }
+  }
+</style>

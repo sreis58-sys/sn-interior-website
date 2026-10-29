@@ -1,0 +1,215 @@
+---
+import { render } from 'astro:content';
+import Arrow from '../../components/Arrow.astro';
+import Index from '../../components/Index.astro';
+import Media from '../../components/Media.astro';
+import Base from '../../layouts/Base.astro';
+import { formatDate, getPosts, postImage, readingTime, type Post } from '../../data/blog';
+import { site } from '../../data/site';
+
+export async function getStaticPaths() {
+  const posts = await getPosts();
+  return posts.map((post) => ({
+    params: { slug: post.id },
+    props: {
+      post,
+      related: posts.filter((p) => p.id !== post.id && p.data.category === post.data.category).slice(0, 4),
+    },
+  }));
+}
+
+interface Props {
+  post: Post;
+  related: Post[];
+}
+const { post, related } = Astro.props;
+const { title, description, date, category } = post.data;
+const { Content } = await render(post);
+const img = postImage(post);
+const minutes = readingTime(post.body);
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'BlogPosting',
+  headline: title,
+  description,
+  ...(date ? { datePublished: date.toISOString() } : {}),
+  author: { '@type': 'Organization', name: site.name, url: site.url },
+  publisher: { '@type': 'Organization', name: site.name },
+  mainEntityOfPage: new URL(`/blog/${post.id}`, site.url).href,
+};
+---
+
+<Base title={title} description={description} image={img.src} type="article" schema={schema}>
+  <article class="post">
+    <header class="post__head grid">
+      <nav class="post__crumb micro muted" aria-label="Konum">
+        <a class="link" href="/blog">Blog</a>
+        <span aria-hidden="true">/</span>
+        <span>{category}</span>
+      </nav>
+      <h1 class="post__title">{title}</h1>
+      <p class="post__meta micro muted">
+        {date && <time datetime={date.toISOString()}>{formatDate(date)}</time>}
+        <span>{minutes} dk okuma</span>
+        <span>{site.name}</span>
+      </p>
+      <p class="post__lead lead">{description}</p>
+    </header>
+
+    <Media class="post__img" src={img.src} alt={img.alt} sizes="(min-width: 1024px) 84vw, 100vw" ratio="21 / 9" eager reveal={false} />
+
+    <div class="post__body grid">
+      <aside class="post__aside micro muted" aria-label="Yazı bilgisi">
+        <span class="coral">●</span>
+        {category}
+      </aside>
+      <div class="prose post__prose">
+        <Content />
+      </div>
+    </div>
+  </article>
+
+  {
+    related.length > 0 && (
+      <section class="more section" aria-labelledby="more-title">
+        <div class="grid more__head">
+          <Index no="—" label={category} class="more__index" />
+          <h2 id="more-title" class="h3 more__title">
+            İlginizi çekebilir
+          </h2>
+          <a href="/blog" class="link small more__all">
+            Tüm yazılar <Arrow />
+          </a>
+        </div>
+        <ul role="list" class="wrap more__list">
+          {related.map((p) => (
+            <li>
+              <a href={`/blog/${p.id}`}>
+                <span class="more__t">{p.data.title}</span>
+                <Arrow class="arrow--move" />
+              </a>
+            </li>
+          ))}
+        </ul>
+      </section>
+    )
+  }
+</Base>
+
+<style>
+  .post__head {
+    padding-top: calc(var(--header-h) + var(--space-l));
+    padding-bottom: var(--space-l);
+    row-gap: var(--space-s);
+  }
+  .post__crumb {
+    grid-column: 1 / -1;
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+  }
+  .post__title {
+    grid-column: 1 / span 10;
+    font-size: clamp(2.3rem, 1.2rem + 4vw, 5.6rem);
+    line-height: 1;
+    letter-spacing: -0.03em;
+    margin-top: var(--space-s);
+  }
+  .post__meta {
+    grid-column: 1 / span 6;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 1.75rem;
+    margin-top: var(--space-s);
+  }
+  .post__lead {
+    grid-column: 7 / -1;
+    color: var(--ink-muted);
+    font-size: clamp(1.15rem, 1rem + 0.6vw, 1.5rem);
+  }
+  .post :global(.post__img) {
+    margin-inline: var(--gutter);
+  }
+  .post__body {
+    padding-block: var(--space-section);
+  }
+  .post__aside {
+    grid-column: 1 / span 2;
+    align-self: start;
+    position: sticky;
+    top: calc(var(--header-h) + 2rem);
+    display: flex;
+    gap: 0.6rem;
+  }
+  .post__prose {
+    grid-column: 4 / span 7;
+  }
+
+  .more {
+    padding-top: 0;
+  }
+  .more__head {
+    align-items: end;
+    row-gap: var(--space-s);
+    margin-bottom: var(--space-m);
+  }
+  .more :global(.more__index) {
+    grid-column: 1 / -1;
+  }
+  .more__title {
+    grid-column: 1 / span 8;
+  }
+  .more__all {
+    grid-column: 10 / -1;
+    justify-self: end;
+  }
+  .more__list {
+    border-top: 1px solid var(--line);
+  }
+  .more__list li {
+    border-bottom: 1px solid var(--line);
+  }
+  .more__list a {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1.5rem;
+    padding-block: 1.15rem;
+  }
+  .more__t {
+    font-family: var(--serif);
+    font-size: clamp(1.15rem, 1rem + 0.6vw, 1.5rem);
+    line-height: 1.2;
+    transition: transform var(--dur-2) var(--ease);
+  }
+  .more__list :global(.arrow) {
+    color: var(--coral);
+  }
+  @media (hover: hover) {
+    .more__list a:hover .more__t {
+      transform: translateX(0.5rem);
+    }
+  }
+
+  @media (max-width: 1023px) {
+    .post__title,
+    .post__meta,
+    .post__lead,
+    .post__prose {
+      grid-column: 1 / -1;
+    }
+    .post__aside {
+      display: none;
+    }
+    .post :global(.post__img) {
+      margin-inline: 0;
+      aspect-ratio: 16 / 10 !important;
+    }
+    .more__title,
+    .more__all {
+      grid-column: 1 / -1;
+      justify-self: start;
+    }
+  }
+</style>

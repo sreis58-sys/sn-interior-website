@@ -1,0 +1,94 @@
+---
+import Prose from '../layouts/Prose.astro';
+import { site } from '../data/site';
+---
+
+<Prose
+  title="Gizlilik Politikası"
+  lines={['Gizlilik', '<em>politikası.</em>']}
+  description="Sulenur İç Mimarlık web sitesinde kişisel verilerin nasıl işlendiği ve korunduğu; KVKK kapsamında aydınlatma metni."
+  updated="15 Ekim 2026"
+>
+  <p>
+    Bu metin, {site.name} (“Sulenur”, “biz”) olarak {site.url.replace('https://', '')} adresindeki web sitemizi
+    ziyaret ettiğinizde ve bizimle iletişime geçtiğinizde kişisel verilerinizi nasıl işlediğimizi açıklar.
+  </p>
+
+  <h2 id="kvkk">Kişisel verilerin korunması hakkında aydınlatma metni</h2>
+  <p>
+    6698 sayılı Kişisel Verilerin Korunması Kanunu (“KVKK”) uyarınca veri sorumlusu sıfatıyla, kişisel verilerinizi
+    aşağıda açıklanan kapsamda işliyoruz.
+  </p>
+
+  <h3>Hangi verileri işliyoruz?</h3>
+  <ul>
+    <li><strong>İletişim formu:</strong> ad soyad, e-posta adresi, telefon numarası (isteğe bağlı), proje türü ve mesajınızda paylaştığınız bilgiler.</li>
+    <li><strong>E-posta, telefon ve WhatsApp yazışmaları:</strong> bize doğrudan ilettiğiniz iletişim bilgileri ve mesaj içerikleri.</li>
+    <li><strong>Teknik kayıtlar:</strong> sitemizin barındırıldığı sunucunun güvenlik amacıyla tuttuğu IP adresi, tarayıcı bilgisi ve erişim zamanı gibi standart kayıtlar.</li>
+  </ul>
+
+  <h3>Hangi amaçlarla işliyoruz?</h3>
+  <ul>
+    <li>Talebinize dönüş yapmak, keşif ve görüşme planlamak,</li>
+    <li>size özel teklif hazırlamak ve sözleşme öncesi süreci yürütmek,</li>
+    <li>sitemizin güvenliğini sağlamak ve yasal yükümlülüklerimizi yerine getirmek.</li>
+  </ul>
+
+  <h3>Hukuki sebep</h3>
+  <p>
+    Verileriniz; KVKK’nın 5. maddesinin 2. fıkrasında yer alan “bir sözleşmenin kurulması veya ifasıyla doğrudan
+    doğruya ilgili olması”, “veri sorumlusunun hukuki yükümlülüğünü yerine getirebilmesi” ve “ilgili kişinin temel hak ve
+    özgürlüklerine zarar vermemek kaydıyla veri sorumlusunun meşru menfaatleri” hukuki sebeplerine dayanılarak, form
+    veya doğrudan iletişim yoluyla otomatik olmayan ya da kısmen otomatik yöntemlerle toplanır.
+  </p>
+
+  <h3>Aktarım</h3>
+  <p>
+    Kişisel verilerinizi satmıyor ve pazarlama amacıyla üçüncü kişilerle paylaşmıyoruz. Verileriniz yalnızca yukarıdaki
+    amaçlar için gerekli olduğu ölçüde; e-posta ve barındırma hizmeti aldığımız sağlayıcılarla ve talep halinde yetkili
+    kamu kurumlarıyla paylaşılabilir. Kullandığımız e-posta hizmetinin sunucuları yurt dışında bulunabilir; bu tür
+    aktarımlar KVKK’nın 9. maddesindeki şartlara uygun olarak yapılır.
+  </p>
+
+  <h3>Saklama süresi</h3>
+  <p>
+    İletişim talepleriniz, talebin sonuçlanmasından itibaren makul bir süre ve ilgili mevzuatta öngörülen süreler boyunca
+    saklanır; süre dolduğunda silinir, yok edilir veya anonim hale getirilir.
+  </p>
+
+  <h3>Haklarınız</h3>
+  <p>KVKK’nın 11. maddesi uyarınca;</p>
+  <ul>
+    <li>kişisel verilerinizin işlenip işlenmediğini öğrenme ve işlenmişse buna ilişkin bilgi talep etme,</li>
+    <li>işlenme amacını ve amacına uygun kullanılıp kullanılmadığını öğrenme,</li>
+    <li>yurt içinde veya yurt dışında aktarıldığı üçüncü kişileri bilme,</li>
+    <li>eksik veya yanlış işlenmişse düzeltilmesini, şartları oluştuğunda silinmesini veya yok edilmesini isteme,</li>
+    <li>bu işlemlerin verilerin aktarıldığı üçüncü kişilere bildirilmesini isteme,</li>
+    <li>münhasıran otomatik sistemlerle analiz edilmesi sonucu aleyhinize bir sonucun ortaya çıkmasına itiraz etme,</li>
+    <li>kanuna aykırı işlenmesi sebebiyle zarara uğramanız halinde zararın giderilmesini talep etme</li>
+  </ul>
+  <p>
+    haklarına sahipsiniz. Başvurularınızı <a href={`mailto:${site.email}`}>{site.email}</a> adresine iletebilirsiniz.
+    Talebinizi en geç otuz gün içinde ücretsiz olarak sonuçlandırırız.
+  </p>
+
+  <h2>Çerezler ve tarayıcı depolaması</h2>
+  <p>
+    Sitemizde reklam, analiz veya takip amaçlı çerez kullanmıyoruz. Açılış animasyonunun aynı oturumda tekrar
+    gösterilmemesi için tarayıcınızın oturum depolamasına (sessionStorage) kişisel veri içermeyen tek bir işaret yazılır;
+    bu işaret tarayıcı sekmesini kapattığınızda silinir. Yazı tipleri ve görseller kendi sunucumuzdan yüklenir; üçüncü
+    taraf hizmetlerine istek gönderilmez.
+  </p>
+
+  <h2>Değişiklikler</h2>
+  <p>
+    Bu politikayı gerektiğinde güncelleyebiliriz. Güncel metin her zaman bu sayfada yayımlanır; sayfanın başındaki tarih
+    son güncellemeyi gösterir.
+  </p>
+
+  <h2>İletişim</h2>
+  <p>
+    {site.name} · {site.city}<br />
+    <a href={`mailto:${site.email}`}>{site.email}</a> · <a href={site.phoneHref}>{site.phone}</a>
+  </p>
+</Prose>

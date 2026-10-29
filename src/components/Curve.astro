@@ -1,0 +1,26 @@
+---
+/**
+ * Mercan çizgi — logodan türeyen ince eğri. mode="scroll" kaydırmayla çizilir,
+ * mode="load" sayfa açılışında bir kez çizilir, "static" hareketsizdir.
+ */
+interface Props {
+  d: string;
+  viewBox?: string;
+  class?: string;
+  mode?: 'scroll' | 'load' | 'static';
+  stroke?: string;
+}
+const { d, viewBox = '0 0 100 100', class: cls = '', mode = 'scroll', stroke } = Astro.props;
+---
+
+<svg
+  class:list={['curve', cls]}
+  viewBox={viewBox}
+  preserveAspectRatio="none"
+  data-draw={mode === 'static' ? undefined : mode}
+  aria-hidden="true"
+  focusable="false"
+  style={stroke ? `stroke:${stroke}` : undefined}
+>
+  <path d={d} pathLength="1"></path>
+</svg>

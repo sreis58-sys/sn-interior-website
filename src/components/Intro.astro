@@ -1,0 +1,112 @@
+---
+import Logo from './Logo.astro';
+/*
+  Oturumun ilk ziyaretinde ~1.5 sn'lik açılış. Zaman çizelgesi:
+  0–300ms   monogram belirir
+  150–900ms ultramarin ilerleme çizgisi dolar
+  850ms     işaret kaybolur
+  950–1500  iki kemik panel ortadan ayrılır (hero maskesi aynı anda açılmaya başlar)
+  Sınıf <head> içindeki satır içi betikle eklenir; JS yoksa hiç görünmez.
+*/
+---
+
+<div class="intro" aria-hidden="true">
+  <div class="intro__panel intro__panel--l"></div>
+  <div class="intro__panel intro__panel--r"></div>
+  <div class="intro__mark">
+    <Logo variant="stacked" />
+    <span class="intro__bar"><span></span></span>
+  </div>
+</div>
+
+<style>
+  .intro {
+    display: none;
+  }
+  :global(html.intro) .intro {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 300;
+    pointer-events: none;
+  }
+  :global(html.intro) {
+    overflow: hidden;
+  }
+  .intro__panel {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 50.5%;
+    background: var(--bone);
+    animation: intro-open 550ms var(--ease-io) 950ms forwards;
+  }
+  .intro__panel--l {
+    left: 0;
+    --to: -101%;
+  }
+  .intro__panel--r {
+    right: 0;
+    --to: 101%;
+  }
+  .intro__mark {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35rem;
+    color: var(--ink);
+    animation:
+      intro-in 300ms var(--ease) both,
+      intro-out 220ms var(--ease) 850ms forwards;
+  }
+  .intro__bar {
+    width: 7.5rem;
+    height: 1px;
+    margin-top: 1.4rem;
+    background: var(--line);
+    overflow: hidden;
+  }
+  .intro__bar span {
+    display: block;
+    height: 100%;
+    background: var(--ultra);
+    transform-origin: left;
+    transform: scaleX(0);
+    animation: intro-bar 750ms var(--ease-io) 150ms forwards;
+  }
+  @keyframes intro-in {
+    from {
+      opacity: 0;
+    }
+  }
+  @keyframes intro-out {
+    to {
+      opacity: 0;
+    }
+  }
+  @keyframes intro-bar {
+    to {
+      transform: scaleX(1);
+    }
+  }
+  @keyframes intro-open {
+    to {
+      transform: translateX(var(--to));
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .intro__panel {
+      animation: intro-out 300ms linear 450ms forwards;
+    }
+    .intro__mark {
+      animation: intro-out 300ms linear 400ms forwards;
+    }
+    .intro__bar span {
+      animation: none;
+      transform: none;
+    }
+  }
+</style>

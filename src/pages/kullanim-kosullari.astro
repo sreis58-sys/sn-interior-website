@@ -1,0 +1,62 @@
+---
+import Prose from '../layouts/Prose.astro';
+import { site } from '../data/site';
+---
+
+<Prose
+  title="Kullanım Koşulları"
+  lines={['Kullanım', '<em>koşulları.</em>']}
+  description="Sulenur İç Mimarlık web sitesinin kullanımına ilişkin koşullar."
+  updated="15 Ekim 2026"
+>
+  <p>
+    {site.url.replace('https://', '')} adresindeki web sitesini ziyaret ederek aşağıdaki koşulları kabul etmiş
+    sayılırsınız. Koşulları kabul etmiyorsanız lütfen siteyi kullanmayın.
+  </p>
+
+  <h2>Fikri mülkiyet</h2>
+  <p>
+    Sitede yer alan proje görselleri, 3D görselleştirmeler, metinler, logo ve tasarım öğeleri {site.name}’a veya
+    kullanım izni alınmış hak sahiplerine aittir. Bu içerikler yazılı iznimiz olmadan kopyalanamaz, çoğaltılamaz,
+    ticari amaçla kullanılamaz veya başka bir yerde yayımlanamaz. Kaynak göstererek ve bağlantı vererek kısa alıntı
+    yapılabilir.
+  </p>
+
+  <h2>Görseller hakkında</h2>
+  <p>
+    Proje sayfalarındaki görsellerin bir kısmı, uygulama öncesinde hazırlanan 3D görselleştirmelerdir. Uygulanan mekân;
+    malzeme tedariki, saha koşulları ve süreç içinde alınan kararlara bağlı olarak görsellerden farklılık gösterebilir.
+    Bazı sayfalarda atmosfer amaçlı lisanslı fotoğraflar da kullanılmaktadır.
+  </p>
+
+  <h2>Bilgilerin niteliği</h2>
+  <p>
+    Blog yazıları ve sitedeki diğer içerikler genel bilgilendirme amaçlıdır; belirli bir mekân için profesyonel proje,
+    statik veya teknik danışmanlık yerine geçmez. Fiyat, süre ve kapsam bilgileri bağlayıcı değildir; her proje için
+    keşif sonrasında yazılı teklif hazırlanır.
+  </p>
+
+  <h2>Dış bağlantılar</h2>
+  <p>
+    Sitede üçüncü taraf hizmetlerine (ör. WhatsApp) bağlantılar bulunabilir. Bu hizmetlerin içeriğinden ve gizlilik
+    uygulamalarından ilgili hizmet sağlayıcıları sorumludur.
+  </p>
+
+  <h2>Sorumluluğun sınırlandırılması</h2>
+  <p>
+    Sitenin kesintisiz ve hatasız çalışması için özen gösteririz; ancak teknik aksaklıklar, bakım çalışmaları veya
+    üçüncü taraf hizmetlerinden kaynaklanan erişim sorunlarından doğabilecek dolaylı zararlardan sorumlu tutulamayız.
+  </p>
+
+  <h2>Değişiklikler ve uygulanacak hukuk</h2>
+  <p>
+    Bu koşulları önceden haber vermeksizin güncelleyebiliriz; güncel metin bu sayfada yayımlanır. Koşullar Türkiye
+    Cumhuriyeti hukukuna tabidir; uyuşmazlıklarda Sakarya mahkemeleri ve icra daireleri yetkilidir.
+  </p>
+
+  <h2>İletişim</h2>
+  <p>
+    Sorularınız için <a href={`mailto:${site.email}`}>{site.email}</a> adresine yazabilir veya
+    <a href={site.phoneHref}>{site.phone}</a> numaralı telefondan bize ulaşabilirsiniz.
+  </p>
+</Prose>

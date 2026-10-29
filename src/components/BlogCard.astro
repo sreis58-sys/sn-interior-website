@@ -1,0 +1,84 @@
+---
+import { formatDate, postImage, type Post } from '../data/blog';
+import Arrow from './Arrow.astro';
+import Media from './Media.astro';
+
+interface Props {
+  post: Post;
+  size: 'feature' | 'small';
+  sizes: string;
+  ratio: string;
+  headingLevel?: 'h2' | 'h3';
+  delay?: number;
+}
+const { post, size, sizes, ratio, headingLevel: H = 'h3', delay } = Astro.props;
+const img = postImage(post);
+---
+
+<a href={`/blog/${post.id}`} class:list={['bc', `bc--${size}`]} data-category={post.data.category}>
+  <Media src={img.src} alt={img.alt} sizes={sizes} ratio={ratio} delay={delay} />
+  <div class="bc__body">
+    <p class="bc__meta micro muted">
+      <span>{post.data.category}</span>
+      {post.data.date && <time datetime={post.data.date.toISOString()}>{formatDate(post.data.date)}</time>}
+    </p>
+    <H class="bc__title">{post.data.title}</H>
+    {size === 'feature' && <p class="bc__desc muted">{post.data.description}</p>}
+    <span class="bc__more small">
+      Yazıyı oku <Arrow class="arrow--move" />
+    </span>
+  </div>
+</a>
+
+<style>
+  .bc {
+    display: block;
+  }
+  .bc__body {
+    padding-top: 1.1rem;
+  }
+  .bc__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 1.25rem;
+  }
+  .bc__title {
+    margin-top: 0.8rem;
+    font-size: var(--fs-h4);
+    line-height: 1.12;
+    transition: transform 700ms var(--ease);
+  }
+  .bc--feature .bc__title {
+    font-size: clamp(1.9rem, 1.2rem + 2.2vw, 3.4rem);
+    line-height: 1.02;
+    letter-spacing: -0.025em;
+  }
+  .bc__desc {
+    margin-top: 1rem;
+    max-width: 34rem;
+  }
+  .bc__more {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-top: 1rem;
+    font-weight: 500;
+  }
+  .bc__more :global(.arrow) {
+    color: var(--coral);
+  }
+  .bc :global(.media img) {
+    transition: transform 700ms var(--ease);
+  }
+  :global(html.js) .bc :global(.media:not(.is-in) img) {
+    transition: transform calc(var(--dur-3) + 400ms) var(--ease);
+  }
+  @media (hover: hover) {
+    .bc:hover :global(.media.is-in img) {
+      transform: scale(1.035);
+    }
+    .bc:hover .bc__title {
+      transform: translateX(0.35rem);
+    }
+  }
+</style>

@@ -1,0 +1,265 @@
+---
+import Arrow from '../components/Arrow.astro';
+import Index from '../components/Index.astro';
+import Lines from '../components/Lines.astro';
+import Media from '../components/Media.astro';
+import PageIntro from '../components/PageIntro.astro';
+import Base from '../layouts/Base.astro';
+import { messages, reasons, site } from '../data/site';
+import tall from '../assets/projeler/yatak-odasi/kapak.webp';
+import small from '../assets/projeler/yapi-showroom/02.webp';
+import wide from '../assets/projeler/yapi-showroom/10.webp';
+---
+
+<Base
+  title="Hakkımızda"
+  description="Sulenur İç Mimarlık: her projeyi bir hikâye olarak gören, yaşam tarzınıza özel ve zamansız mekânlar tasarlayan iç mimarlık stüdyosu."
+>
+  <PageIntro
+    no="01"
+    label="Hakkımızda"
+    lines={['Hayallerinizi', '<em>mekâna</em>', 'dönüştürüyoruz.']}
+  />
+
+  <section class="story section" aria-labelledby="story-title">
+    <div class="grid">
+      <Media
+        class="story__tall"
+        src={tall}
+        alt="Yatak Odası projesi: dikey panellerle çevrili yatak başı ve avize"
+        sizes="(min-width: 1024px) 34vw, 80vw"
+        ratio="3 / 4"
+        from="left"
+      />
+      <div class="story__text">
+        <Index no="02" label="Hikâyemiz" />
+        <h2 id="story-title" class="lead story__lead">
+          Her projeyi bir hikâye olarak görüyoruz. Yaşam tarzınızı, zevklerinizi ve ihtiyaçlarınızı derinlemesine
+          anlayarak size özel tasarımlar yaratıyoruz.
+        </h2>
+        <p class="muted">
+          Kaliteli malzemeler, yenilikçi çözümler ve titiz işçilikle her mekânı kendine özgü kılıyoruz. Amacımız yalnızca
+          güzel alanlar yaratmak değil; aynı zamanda yaşam kalitenizi artırmak.
+        </p>
+        <p class="muted">
+          Tasarımlarımızda göze hitap etmenin ötesinde, ruhunuzu dinlendirecek alanlar hedefliyoruz. Yaşam kalitenizi
+          artıracak detaylara odaklanıyor, hayalinizdeki mekânı gerçeğe dönüştürüyoruz.
+        </p>
+      </div>
+      <Media
+        class="story__small"
+        src={small}
+        alt="Yapı Showroom: taş tezgâhlı ada ve ahşap kapı detayı"
+        sizes="(min-width: 1024px) 20vw, 60vw"
+        ratio="1"
+        delay={150}
+      />
+    </div>
+  </section>
+
+  <section class="values section on-dark" aria-labelledby="values-title">
+    <div class="grid values__head">
+      <Index no="03" label="İlkelerimiz" />
+      <h2 id="values-title" class="sr-only">İlkelerimiz</h2>
+    </div>
+    <ol role="list" class="values__list">
+      {
+        messages.map((m, i) => (
+          <li class="values__row grid">
+            <span class="values__no">{String(i + 1).padStart(2, '0')}</span>
+            <Lines as="p" class="h2 values__title" lines={[m.title]} />
+            <p class="values__text muted">
+              {m.text}
+            </p>
+          </li>
+        ))
+      }
+    </ol>
+  </section>
+
+  <section class="why section" aria-labelledby="why-title">
+    <div class="grid">
+      <div class="why__aside">
+        <Index no="04" label="Neden Sulenur" />
+        <Lines as="h2" id="why-title" class="h2" lines={['Gerçek yaşama', '<em>uyarlanmış</em>', 'iç mekânlar.']} />
+      </div>
+      <div class="why__list">
+        {
+          reasons.map((r) => (
+            <div class="why__item">
+              <h3 class="h4">{r.title}</h3>
+              <p class="muted">{r.text}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="studio" aria-labelledby="studio-title">
+    <Media class="studio__img" src={wide} alt="Yapı Showroom: raf duvarı, oturma grubu ve toplantı köşesi" sizes="100vw" ratio="21 / 9" />
+    <div class="grid studio__body">
+      <Index no="05" label="Stüdyo" class="studio__index" />
+      <h2 id="studio-title" class="h3 studio__title">Merkezimiz {site.city}.</h2>
+      <p class="studio__text muted">
+        Merkez ofisimiz üzerinden Türkiye genelinde konut ve ticari iç mimarlık projeleri üstleniyoruz. Şehir dışı
+        projelerde keşif, uygulama ve denetim sürecini planlı saha ziyaretleriyle yürütüyoruz.
+      </p>
+      <a href="/iletisim" class="link small studio__link">Bize ulaşın <Arrow /></a>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .story .grid {
+    row-gap: var(--space-l);
+    align-items: start;
+  }
+  .story :global(.story__tall) {
+    grid-column: 1 / span 5;
+    grid-row: 1 / span 2;
+    margin-left: calc(var(--gutter) * -1);
+  }
+  .story__text {
+    grid-column: 7 / span 5;
+    display: grid;
+    gap: var(--space-s);
+    padding-top: var(--space-l);
+  }
+  .story__lead {
+    margin-block: var(--space-xs);
+    text-wrap: pretty;
+  }
+  .story :global(.story__small) {
+    grid-column: 10 / span 3;
+    grid-row: 2;
+    margin-right: calc(var(--gutter) * -1);
+  }
+
+  .values {
+    overflow: clip;
+  }
+  .values__head {
+    margin-bottom: var(--space-l);
+  }
+  .values__head > :global(*) {
+    grid-column: 1 / -1;
+  }
+  .values__row {
+    align-items: baseline;
+    padding-block: var(--space-m);
+    border-top: 1px solid var(--line-dark);
+    position: relative;
+  }
+  .values__row:last-child {
+    border-bottom: 1px solid var(--line-dark);
+  }
+  .values__no {
+    grid-column: 1 / span 1;
+    font-family: var(--serif);
+    color: var(--coral);
+  }
+  .values :global(.values__title) {
+    grid-column: 2 / span 7;
+  }
+  .values__row:nth-child(2) :global(.values__title) {
+    grid-column: 3 / span 7;
+    font-style: italic;
+    font-weight: 200;
+  }
+  .values__row:nth-child(3) :global(.values__title) {
+    grid-column: 4 / span 6;
+  }
+  .values__text {
+    grid-column: 10 / -1;
+  }
+
+  .why .grid {
+    row-gap: var(--space-l);
+  }
+  .why__aside {
+    grid-column: 1 / span 5;
+    display: grid;
+    gap: var(--space-m);
+    align-self: start;
+    position: sticky;
+    top: calc(var(--header-h) + 3rem);
+  }
+  .why__aside :global(em) {
+    font-style: italic;
+    font-weight: 200;
+  }
+  .why__list {
+    grid-column: 8 / -1;
+    display: grid;
+    gap: var(--space-l);
+    padding-top: var(--space-l);
+  }
+  .why__item {
+    display: grid;
+    gap: 0.75rem;
+    padding-top: var(--space-s);
+    border-top: 1px solid var(--line);
+  }
+
+  .studio {
+    padding-bottom: var(--space-section);
+  }
+  .studio__body {
+    margin-top: var(--space-m);
+    row-gap: var(--space-s);
+    align-items: start;
+  }
+  .studio :global(.studio__index) {
+    grid-column: 1 / span 3;
+  }
+  .studio__title {
+    grid-column: 4 / span 4;
+  }
+  .studio__text {
+    grid-column: 8 / span 4;
+  }
+  .studio__link {
+    grid-column: 8 / span 4;
+    justify-self: start;
+  }
+
+  @media (max-width: 1023px) {
+    .story :global(.story__tall) {
+      grid-column: 1 / span 9;
+      grid-row: auto;
+    }
+    .story__text {
+      grid-column: 1 / -1;
+      padding-top: 0;
+    }
+    .story :global(.story__small) {
+      grid-column: 6 / -1;
+      grid-row: auto;
+    }
+    .values__no {
+      grid-column: 1 / -1;
+    }
+    .values :global(.values__title),
+    .values__row:nth-child(n) :global(.values__title),
+    .values__text {
+      grid-column: 1 / -1;
+      margin-top: 0.5rem;
+    }
+    .why__aside,
+    .why__list {
+      grid-column: 1 / -1;
+      position: static;
+      padding-top: 0;
+    }
+    .studio :global(.studio__index),
+    .studio__title,
+    .studio__text,
+    .studio__link {
+      grid-column: 1 / -1;
+    }
+    .studio :global(.studio__img) {
+      aspect-ratio: 4 / 3 !important;
+    }
+  }
+</style>

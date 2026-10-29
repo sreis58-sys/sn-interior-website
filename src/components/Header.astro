@@ -1,0 +1,291 @@
+---
+import { nav, site } from '../data/site';
+import Arrow from './Arrow.astro';
+import Logo from './Logo.astro';
+
+const path = Astro.url.pathname.replace(/\.html$/, '');
+const isActive = (href: string) => path === href || path.startsWith(href + '/');
+---
+
+<header class="hdr" data-header transition:name="site-header">
+  <a href="/" class="hdr__brand" aria-label={`${site.name} — Ana sayfa`}>
+    <Logo class="hdr__logo" />
+  </a>
+
+  <nav class="hdr__nav" aria-label="Ana menü">
+    <ul role="list">
+      {
+        nav.map((l) => (
+          <li>
+            <a href={l.href} class="hdr__link" aria-current={isActive(l.href) ? 'page' : undefined}>
+              {l.label}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </nav>
+
+  <a href="/iletisim" class="hdr__cta">
+    <span>Proje başlat</span>
+    <Arrow />
+  </a>
+
+  <button class="hdr__toggle" type="button" data-menu-toggle aria-expanded="false" aria-controls="site-menu">
+    <span class="hdr__toggle-label" data-menu-label>Menü</span>
+    <span class="hdr__bars" aria-hidden="true"><span></span><span></span></span>
+  </button>
+</header>
+
+<div id="site-menu" class="menu on-dark" data-menu aria-label="Menü">
+  <nav aria-label="Mobil menü">
+    <ol role="list" class="menu__list">
+      {
+        nav.map((l, i) => (
+          <li style={`--i:${i}`}>
+            <a href={l.href} aria-current={isActive(l.href) ? 'page' : undefined}>
+              <span class="menu__no">{String(i + 1).padStart(2, '0')}</span>
+              <span class="menu__label">{l.label}</span>
+            </a>
+          </li>
+        ))
+      }
+    </ol>
+  </nav>
+  <div class="menu__foot small">
+    <a href={site.phoneHref}>{site.phone}</a>
+    <a href={`mailto:${site.email}`}>{site.email}</a>
+    <span class="muted">{site.city}</span>
+  </div>
+</div>
+
+<style>
+  .hdr {
+    position: fixed;
+    inset: 0 0 auto 0;
+    z-index: 100;
+    height: var(--header-h);
+    display: flex;
+    align-items: center;
+    gap: var(--space-m);
+    padding-inline: var(--gutter);
+    color: var(--ink);
+    transition:
+      transform var(--dur-2) var(--ease),
+      background-color var(--dur-2) var(--ease),
+      box-shadow var(--dur-2) var(--ease);
+  }
+  .hdr.is-scrolled {
+    background: rgb(244 239 234 / 0.94);
+    box-shadow: 0 1px 0 var(--line);
+  }
+  .hdr.is-hidden {
+    transform: translateY(-100%);
+  }
+  :global(html.menu-open) .hdr {
+    color: var(--on-dark);
+    background: transparent;
+    box-shadow: none;
+    transform: none;
+  }
+
+  .hdr__brand {
+    display: flex;
+    align-items: center;
+    margin-right: auto;
+    min-height: 44px;
+    /* logo dosyası ne olursa olsun bu kutuya sığar */
+    max-width: min(15rem, 60vw);
+  }
+
+  .hdr__nav ul {
+    display: flex;
+    gap: clamp(1.25rem, 2.2vw, 2.5rem);
+  }
+  .hdr__link,
+  .hdr__cta {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding-block: 0.6rem;
+    font-size: var(--fs-small);
+    font-weight: 500;
+    letter-spacing: 0.01em;
+  }
+  /* ince, kayan gösterge — klasik altı çizili yerine */
+  .hdr__link::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0.2rem;
+    height: 1px;
+    background: var(--coral);
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform var(--dur-2) var(--ease);
+  }
+  .hdr__link[aria-current='page']::after {
+    transform: scaleX(1);
+  }
+  @media (hover: hover) {
+    .hdr__link:hover::after {
+      transform: scaleX(1);
+      transform-origin: left;
+    }
+  }
+  .hdr__cta {
+    padding-left: 1.5rem;
+    border-left: 1px solid var(--line);
+  }
+
+  .hdr__toggle {
+    display: none;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    min-height: 44px;
+    min-width: 44px;
+    margin-right: -0.5rem;
+    padding-inline: 0.5rem;
+    font-size: var(--fs-small);
+    font-weight: 500;
+  }
+  .hdr__bars {
+    position: relative;
+    width: 1.6rem;
+    height: 0.6rem;
+  }
+  .hdr__bars span {
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: currentColor;
+    transition: transform var(--dur-2) var(--ease), top var(--dur-2) var(--ease);
+  }
+  .hdr__bars span:first-child {
+    top: 0;
+  }
+  .hdr__bars span:last-child {
+    top: 100%;
+  }
+  :global(html.menu-open) .hdr__bars span:first-child {
+    top: 50%;
+    transform: rotate(20deg);
+  }
+  :global(html.menu-open) .hdr__bars span:last-child {
+    top: 50%;
+    transform: rotate(-20deg);
+  }
+
+  @media (max-width: 1023px) {
+    .hdr__nav,
+    .hdr__cta {
+      display: none;
+    }
+    .hdr__toggle {
+      display: inline-flex;
+    }
+  }
+  /* Telefonda: kompakt logo, yalnız çizgiler; etiket ekran okuyucular için kalır */
+  @media (max-width: 767px) {
+    .hdr :global(.hdr__logo) {
+      --logo-h: 1.95rem;
+    }
+    .hdr__toggle-label {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+      white-space: nowrap;
+    }
+    .hdr__bars {
+      width: 1.75rem;
+    }
+  }
+
+  /* --- Tam ekran menü --- */
+  .menu {
+    position: fixed;
+    inset: 0;
+    z-index: 90;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: calc(var(--header-h) + var(--space-l)) var(--gutter) var(--space-m);
+    clip-path: inset(0 0 100% 0);
+    visibility: hidden;
+    transition:
+      clip-path var(--dur-3) var(--ease-io),
+      visibility 0s linear var(--dur-3);
+    overflow-y: auto;
+  }
+  :global(html.menu-open) .menu {
+    clip-path: inset(0 0 0 0);
+    visibility: visible;
+    transition:
+      clip-path var(--dur-3) var(--ease-io),
+      visibility 0s;
+  }
+  :global(html.menu-open) {
+    overflow: hidden;
+  }
+  .menu__list {
+    display: grid;
+    gap: 0.2rem;
+  }
+  .menu__list li {
+    overflow: hidden;
+  }
+  .menu__list a {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+    padding-block: 0.25rem;
+    transform: translateY(calc(100% + 0.6em));
+    transition: transform var(--dur-3) var(--ease);
+    transition-delay: calc(var(--i) * var(--stagger) + 250ms);
+  }
+  :global(html.menu-open) .menu__list a {
+    transform: none;
+  }
+  .menu__no {
+    font-family: var(--serif);
+    font-size: 0.9rem;
+    color: var(--coral);
+    min-width: 1.6rem;
+  }
+  .menu__label {
+    font-family: var(--serif);
+    font-weight: 300;
+    font-size: clamp(2.6rem, 11vw, 4.5rem);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+  }
+  .menu__list a[aria-current='page'] .menu__label {
+    font-style: italic;
+  }
+  .menu__foot {
+    display: grid;
+    gap: 0.4rem;
+    padding-top: var(--space-m);
+    border-top: 1px solid var(--line-dark);
+    opacity: 0;
+    transition: opacity var(--dur-2) var(--ease) 0ms;
+  }
+  :global(html.menu-open) .menu__foot {
+    opacity: 1;
+    transition-delay: 600ms;
+  }
+  .menu__foot a {
+    padding-block: 0.4rem;
+  }
+  @media (min-width: 1024px) {
+    .menu {
+      display: none;
+    }
+  }
+</style>

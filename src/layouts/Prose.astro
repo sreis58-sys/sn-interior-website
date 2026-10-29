@@ -1,0 +1,47 @@
+---
+import Index from '../components/Index.astro';
+import Lines from '../components/Lines.astro';
+import Base from './Base.astro';
+
+interface Props {
+  title: string;
+  lines: string[];
+  description: string;
+  updated: string;
+}
+const { title, lines, description, updated } = Astro.props;
+---
+
+<Base title={title} description={description}>
+  <article class="legal grid">
+    <header class="legal__head">
+      <Index no="—" label="Yasal" />
+      <Lines as="h1" class="h1 legal__title" lines={lines} reveal={false} />
+      <p class="micro muted">Son güncelleme: {updated}</p>
+    </header>
+    <div class="legal__body prose">
+      <slot />
+    </div>
+  </article>
+</Base>
+
+<style>
+  .legal {
+    padding-top: calc(var(--header-h) + var(--space-l));
+    padding-bottom: var(--space-section);
+    row-gap: var(--space-l);
+  }
+  .legal__head {
+    grid-column: 1 / -1;
+    display: grid;
+    gap: var(--space-m);
+  }
+  .legal__body {
+    grid-column: 4 / span 6;
+  }
+  @media (max-width: 1023px) {
+    .legal__body {
+      grid-column: 1 / -1;
+    }
+  }
+</style>

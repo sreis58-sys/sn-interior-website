@@ -1,0 +1,182 @@
+---
+import Arrow from '../components/Arrow.astro';
+import PageIntro from '../components/PageIntro.astro';
+import Base from '../layouts/Base.astro';
+import faq from '../data/sss.json';
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faq.map((f) => ({
+    '@type': 'Question',
+    name: f.q,
+    acceptedAnswer: { '@type': 'Answer', text: f.a },
+  })),
+};
+---
+
+<Base
+  title="Sıkça Sorulan Sorular"
+  description="İç mimarlık süreci, ücretlendirme, süreler, anahtar teslim hizmet ve garanti hakkında sıkça sorulan sorular."
+  schema={schema}
+>
+  <PageIntro
+    no="01"
+    label="S.S.S."
+    lines={['Sıkça', 'sorulan', '<em>sorular.</em>']}
+    lead="Süre, ücret, kapsam ve garanti hakkında en çok merak edilenler. Aradığınızı bulamazsanız bize doğrudan yazın."
+  />
+
+  <section class="faq grid" aria-label="Sorular ve cevaplar">
+    <div class="faq__list" data-accordion>
+      {
+        faq.map((f, i) => (
+          <div class="faq__item">
+            <h2 class="faq__q">
+              <button type="button" aria-expanded="false" aria-controls={`faq-${i}`} id={`faq-q-${i}`}>
+                <span class="faq__no">{String(i + 1).padStart(2, '0')}</span>
+                <span class="faq__text">{f.q}</span>
+                <span class="faq__icon" aria-hidden="true" />
+              </button>
+            </h2>
+            <div class="faq__a" id={`faq-${i}`} role="region" aria-labelledby={`faq-q-${i}`}>
+              <div>
+                <p>{f.a}</p>
+              </div>
+            </div>
+          </div>
+        ))
+      }
+    </div>
+    <aside class="faq__aside">
+      <p class="micro muted">Başka bir sorunuz mu var?</p>
+      <a href="/iletisim" class="cta">
+        <span class="cta__circle"><Arrow /></span>
+        <span>Bize yazın</span>
+      </a>
+    </aside>
+  </section>
+</Base>
+
+<style>
+  .faq {
+    padding-bottom: var(--space-section);
+    row-gap: var(--space-l);
+  }
+  .faq__list {
+    grid-column: 1 / span 8;
+    border-top: 1px solid var(--line);
+  }
+  .faq__item {
+    border-bottom: 1px solid var(--line);
+  }
+  .faq__q {
+    font: inherit;
+    letter-spacing: normal;
+  }
+  .faq__q button {
+    display: grid;
+    grid-template-columns: 3rem 1fr 1.5rem;
+    align-items: baseline;
+    gap: 0.5rem;
+    width: 100%;
+    padding-block: 1.4rem;
+    text-align: left;
+  }
+  .faq__no {
+    font-family: var(--serif);
+    font-size: 0.9rem;
+    color: var(--coral);
+  }
+  .faq__text {
+    font-family: var(--serif);
+    font-weight: 300;
+    font-size: clamp(1.25rem, 1rem + 0.9vw, 1.9rem);
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    transition: transform var(--dur-2) var(--ease);
+  }
+  .faq__icon {
+    position: relative;
+    width: 1rem;
+    height: 1rem;
+    align-self: center;
+    transition: transform var(--dur-2) var(--ease);
+  }
+  .faq__icon::before,
+  .faq__icon::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    height: 1px;
+    background: currentColor;
+  }
+  .faq__icon::after {
+    transform: rotate(90deg);
+  }
+  .faq__q button[aria-expanded='true'] .faq__icon {
+    transform: rotate(45deg);
+    color: var(--coral);
+  }
+  @media (hover: hover) {
+    .faq__q button:hover .faq__text {
+      transform: translateX(0.35rem);
+    }
+  }
+  .faq__a {
+    display: grid;
+    grid-template-rows: 0fr;
+    opacity: 0;
+    visibility: hidden;
+    transition:
+      grid-template-rows var(--dur-2) var(--ease),
+      opacity var(--dur-2) var(--ease),
+      visibility 0s linear var(--dur-2);
+  }
+  .faq__a > div {
+    overflow: hidden;
+  }
+  .faq__a[data-open] {
+    visibility: visible;
+    transition-delay: 0s;
+  }
+  :global(html:not(.js)) .faq__a {
+    visibility: visible;
+  }
+  .faq__a p {
+    padding: 0 2rem 1.75rem 3.5rem;
+    max-width: 44rem;
+    color: var(--ink-muted);
+  }
+  .faq__a[data-open] {
+    grid-template-rows: 1fr;
+    opacity: 1;
+  }
+  /* JS yoksa cevaplar açık kalır */
+  :global(html:not(.js)) .faq__a {
+    grid-template-rows: 1fr;
+    opacity: 1;
+  }
+  .faq__aside {
+    grid-column: 10 / -1;
+    align-self: start;
+    position: sticky;
+    top: calc(var(--header-h) + 2rem);
+    display: grid;
+    gap: 1rem;
+    justify-items: start;
+  }
+  @media (max-width: 1023px) {
+    .faq__list,
+    .faq__aside {
+      grid-column: 1 / -1;
+      position: static;
+    }
+    .faq__a p {
+      padding-left: 0;
+      padding-right: 0;
+    }
+  }
+</style>

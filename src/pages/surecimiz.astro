@@ -1,0 +1,143 @@
+---
+import Arrow from '../components/Arrow.astro';
+import Index from '../components/Index.astro';
+import Lines from '../components/Lines.astro';
+import Media from '../components/Media.astro';
+import PageIntro from '../components/PageIntro.astro';
+import ProcessTrack from '../components/ProcessTrack.astro';
+import Base from '../layouts/Base.astro';
+import { principles } from '../data/site';
+import model from '../assets/projeler/yapi-showroom/09.webp';
+---
+
+<Base
+  title="Sürecimiz"
+  description="Ücretsiz keşiften fiyatlandırmaya, tasarımdan uygulama ve teslimata: Sulenur İç Mimarlık ile bir projenin adım adım ilerleyişi."
+>
+  <PageIntro
+    no="01"
+    label="Nasıl çalışıyoruz"
+    lines={['Hayalden', '<em>gerçeğe.</em>']}
+    lead="Her projeye sizi anlamakla başlıyoruz. Yaşam tarzınızı, beklentilerinizi ve hayallerinizi çözümleyerek yaşanabilir ve zamansız mekânlar tasarlıyoruz. İşte bu yolculuğun her adımı."
+  />
+
+  <section class="steps section on-dark" data-process aria-labelledby="steps-title">
+    <div class="grid">
+      <div class="steps__aside">
+        <Index no="02" label="Dört adım" />
+        <h2 id="steps-title" class="h3 steps__title">Keşiften teslime, her aşamada yanınızdayız.</h2>
+      </div>
+      <div class="steps__track">
+        <ProcessTrack />
+      </div>
+    </div>
+  </section>
+
+  <section class="philo section" aria-labelledby="philo-title">
+    <div class="grid">
+      <Index no="03" label="Felsefemiz" class="philo__index" />
+      <Lines
+        as="h2"
+        id="philo-title"
+        class="h2 philo__title"
+        lines={['Süreç ne kadar şeffaf,', 'sonuç o kadar', '<em>etkileyicidir.</em>']}
+      />
+      <Media
+        class="philo__img"
+        src={model}
+        alt="Yapı Showroom: malzeme numune duvarı önünde çalışma alanı"
+        sizes="(min-width: 1024px) 30vw, 80vw"
+        ratio="4 / 5"
+        position="30% 50%"
+      />
+      <div class="philo__body">
+        <p class="muted">
+          Her aşamada görseller ve düzenli güncellemelerle iletişimde kalıyoruz. Tasarım kararlarını birlikte alıyor,
+          sürprizleri en aza indiriyoruz.
+        </p>
+        <ul role="list" class="philo__list">
+          {principles.map((p) => <li>{p}</li>)}
+        </ul>
+        <a href="/iletisim" class="cta">
+          <span class="cta__circle"><Arrow /></span>
+          <span>Ücretsiz keşif için yazın</span>
+        </a>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .steps {
+    overflow: clip;
+  }
+  .steps .grid {
+    row-gap: var(--space-l);
+  }
+  .steps__aside {
+    grid-column: 1 / span 4;
+    position: sticky;
+    top: calc(var(--header-h) + 3rem);
+    align-self: start;
+    display: grid;
+    gap: var(--space-m);
+  }
+  .steps__title {
+    max-width: 18ch;
+  }
+  .steps__track {
+    grid-column: 6 / -1;
+    padding-block: var(--space-l) var(--space-m);
+  }
+  .philo .grid {
+    row-gap: var(--space-m);
+  }
+  .philo :global(.philo__index) {
+    grid-column: 1 / -1;
+  }
+  .philo :global(.philo__title) {
+    grid-column: 1 / span 9;
+  }
+  .philo :global(.philo__title em) {
+    font-style: italic;
+    font-weight: 200;
+  }
+  .philo :global(.philo__img) {
+    grid-column: 2 / span 4;
+    margin-top: var(--space-l);
+  }
+  .philo__body {
+    grid-column: 8 / span 4;
+    align-self: end;
+    display: grid;
+    gap: var(--space-m);
+    justify-items: start;
+  }
+  .philo__list {
+    width: 100%;
+  }
+  .philo__list li {
+    padding-block: 0.85rem;
+    border-top: 1px solid var(--line);
+  }
+  .philo__list li::before {
+    content: '—';
+    color: var(--coral);
+    margin-right: 0.75rem;
+  }
+  @media (max-width: 1023px) {
+    .steps__aside,
+    .steps__track,
+    .philo :global(.philo__title),
+    .philo__body {
+      grid-column: 1 / -1;
+      position: static;
+    }
+    .steps__track {
+      padding-top: 0;
+    }
+    .philo :global(.philo__img) {
+      grid-column: 1 / span 9;
+    }
+  }
+</style>

@@ -1,0 +1,51 @@
+---
+import Arrow from './Arrow.astro';
+---
+
+<div class="cursor" data-cursor-el transition:persist="cursor" aria-hidden="true">
+  <div class="cursor__disc">
+    <span class="cursor__label" data-cursor-label>Projeyi gör</span>
+    <Arrow />
+  </div>
+</div>
+
+<style>
+  .cursor {
+    display: none;
+  }
+  :global(html.has-cursor) .cursor {
+    display: block;
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 150;
+    pointer-events: none;
+    will-change: transform;
+  }
+  .cursor__disc {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35rem;
+    width: 7rem;
+    height: 7rem;
+    margin: -3.5rem 0 0 -3.5rem;
+    border-radius: 50%;
+    background: var(--ultra);
+    color: var(--bone);
+    font-size: 0.62rem;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    text-align: center;
+    transform: scale(0);
+    transition: transform 500ms var(--ease);
+  }
+  .cursor.is-active .cursor__disc {
+    transform: scale(1);
+  }
+  :global(html.has-cursor [data-cursor]) {
+    cursor: none;
+  }
+</style>

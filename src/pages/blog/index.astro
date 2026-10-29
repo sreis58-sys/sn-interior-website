@@ -1,0 +1,243 @@
+---
+import Arrow from '../../components/Arrow.astro';
+import BlogCard from '../../components/BlogCard.astro';
+import PageIntro from '../../components/PageIntro.astro';
+import Base from '../../layouts/Base.astro';
+import { categories, formatDate, getPosts } from '../../data/blog';
+
+const posts = await getPosts();
+const [feature, second, third, ...rest] = posts;
+---
+
+<Base title="Blog" description="İç mekân tasarımı, malzeme, uygulama ve yaşam üzerine yazılar. Sulenur İç Mimarlık günlüğü.">
+  <PageIntro
+    no="01"
+    label="Blog"
+    lines={['Günlük']}
+    size="display"
+    lead="Tasarım dünyasından notlar: konut ve ticari mekânlar, malzemeler ve uygulamaya dair pratik öneriler."
+  />
+
+  <section class="feat grid" aria-label="Öne çıkan yazılar">
+    <div class="feat__main">
+      <BlogCard post={feature} size="feature" sizes="(min-width: 1024px) 58vw, 100vw" ratio="16 / 11" headingLevel="h2" />
+    </div>
+    <div class="feat__side">
+      <BlogCard post={second} size="small" sizes="(min-width: 1024px) 30vw, 100vw" ratio="3 / 2" headingLevel="h2" delay={120} />
+      <BlogCard post={third} size="small" sizes="(min-width: 1024px) 22vw, 100vw" ratio="4 / 5" headingLevel="h2" delay={200} />
+    </div>
+  </section>
+
+  <section class="archive section" id="arsiv" aria-labelledby="archive-title">
+    <div class="grid archive__head">
+      <h2 id="archive-title" class="h3 archive__title">Tüm yazılar</h2>
+      <div class="filters" data-filters="#arsiv" role="group" aria-label="Yazıları kategoriye göre filtrele">
+        <button type="button" data-filter="all" aria-pressed="true">Tümü <sup>{rest.length}</sup></button>
+        {
+          categories.map((c) => (
+            <button type="button" data-filter={c} aria-pressed="false">
+              {c} <sup>{rest.filter((p) => p.data.category === c).length}</sup>
+            </button>
+          ))
+        }
+        <span class="filters__indicator" aria-hidden="true"></span>
+      </div>
+      <p class="sr-only" aria-live="polite" data-filter-status></p>
+    </div>
+
+    <ol role="list" class="index-list wrap">
+      {
+        rest.map((p, i) => (
+          <li data-category={p.data.category}>
+            <a href={`/blog/${p.id}`} class="row">
+              <span class="row__no">{String(i + 4).padStart(2, '0')}</span>
+              <span class="row__title">{p.data.title}</span>
+              <span class="row__cat micro muted">{p.data.category}</span>
+              <span class="row__date micro muted">{formatDate(p.data.date)}</span>
+              <Arrow class="row__arrow" />
+            </a>
+          </li>
+        ))
+      }
+    </ol>
+  </section>
+</Base>
+
+<style>
+  .feat {
+    row-gap: var(--space-l);
+    align-items: start;
+    padding-bottom: var(--space-l);
+  }
+  .feat__main {
+    grid-column: 1 / span 7;
+  }
+  .feat__side {
+    grid-column: 9 / -1;
+    display: grid;
+    gap: var(--space-l);
+    margin-top: var(--space-l);
+  }
+  .feat__side > :global(:last-child) {
+    width: 72%;
+  }
+
+  .archive__head {
+    row-gap: var(--space-s);
+    align-items: end;
+    margin-bottom: var(--space-m);
+  }
+  .archive__title {
+    grid-column: 1 / span 4;
+  }
+  .filters {
+    grid-column: 5 / -1;
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 2rem;
+    justify-content: flex-end;
+  }
+  .filters button {
+    min-height: 44px;
+    font-size: var(--fs-small);
+    font-weight: 500;
+    color: var(--ink-muted);
+    transition: color var(--dur-1) var(--ease);
+  }
+  .filters button[aria-pressed='true'] {
+    color: var(--ink);
+  }
+  .filters sup {
+    font-family: var(--serif);
+    color: var(--coral);
+    margin-left: 0.15rem;
+  }
+  .filters__indicator {
+    position: absolute;
+    left: 0;
+    bottom: 0.35rem;
+    height: 1px;
+    width: var(--iw, 0px);
+    background: var(--coral);
+    transform: translateX(var(--ix, 0px));
+    transition:
+      transform var(--dur-2) var(--ease),
+      width var(--dur-2) var(--ease);
+  }
+
+  .index-list {
+    border-top: 1px solid var(--line);
+  }
+  .index-list li {
+    border-bottom: 1px solid var(--line);
+  }
+  .row {
+    position: relative;
+    display: grid;
+    grid-template-columns: 3rem minmax(0, 1fr) 10rem 9rem 1.5rem;
+    gap: var(--col-gap);
+    align-items: baseline;
+    padding-block: 1.15rem;
+  }
+  .row::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 0.4rem;
+    height: 1px;
+    background: var(--coral);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform var(--dur-2) var(--ease);
+  }
+  .row__no {
+    font-family: var(--serif);
+    font-size: 0.9rem;
+    color: var(--ink-soft);
+    transition: transform var(--dur-2) var(--ease);
+  }
+  .row__title {
+    font-family: var(--serif);
+    font-size: clamp(1.15rem, 1rem + 0.6vw, 1.55rem);
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    transition: transform var(--dur-2) var(--ease);
+  }
+  .row :global(.row__arrow) {
+    color: var(--coral);
+    opacity: 0;
+    transition:
+      opacity var(--dur-1) var(--ease),
+      transform var(--dur-2) var(--ease);
+  }
+  :global(.index-list li.is-filtered-in) {
+    animation: row-in var(--dur-2) var(--ease) both;
+  }
+  @keyframes row-in {
+    from {
+      opacity: 0;
+    }
+  }
+  @media (hover: hover) {
+    .row:hover::before {
+      transform: scaleX(1);
+    }
+    .row:hover .row__no {
+      transform: translateX(0.8rem);
+    }
+    .row:hover .row__title {
+      transform: translateX(0.5rem);
+    }
+    .row:hover :global(.row__arrow) {
+      opacity: 1;
+      transform: translateX(4px);
+    }
+  }
+
+  @media (max-width: 1023px) {
+    .feat__main,
+    .feat__side {
+      grid-column: 1 / -1;
+      margin-top: 0;
+    }
+    .feat__side {
+      grid-template-columns: 1fr 1fr;
+      gap: var(--col-gap);
+    }
+    .feat__side > :global(:last-child) {
+      width: 100%;
+    }
+    .archive__title,
+    .filters {
+      grid-column: 1 / -1;
+      justify-content: flex-start;
+    }
+    .row {
+      grid-template-columns: 2.25rem minmax(0, 1fr);
+      row-gap: 0.4rem;
+    }
+    .row__cat {
+      grid-column: 2;
+    }
+    .row__date,
+    .row :global(.row__arrow) {
+      display: none;
+    }
+  }
+  @media (max-width: 600px) {
+    .feat__side {
+      grid-template-columns: 1fr;
+      gap: var(--space-l);
+    }
+    .feat__side :global(.media) {
+      aspect-ratio: 3 / 2 !important;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    :global(.index-list li.is-filtered-in) {
+      animation: none;
+    }
+  }
+</style>

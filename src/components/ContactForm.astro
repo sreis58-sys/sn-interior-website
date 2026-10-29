@@ -1,0 +1,266 @@
+---
+import Arrow from './Arrow.astro';
+import { site } from '../data/site';
+
+const endpoint = import.meta.env.PUBLIC_FORM_ENDPOINT || '';
+---
+
+<form class="cf" data-contact-form data-endpoint={endpoint} data-mail={site.email} novalidate>
+  <div class="cf__row">
+    <div class="field">
+      <label for="cf-name">Ad Soyad</label>
+      <input id="cf-name" name="name" type="text" autocomplete="name" required data-error="Lütfen adınızı yazın." aria-describedby="cf-name-err" />
+      <span class="field__line" aria-hidden="true"></span>
+      <span class="field__error" id="cf-name-err" aria-live="polite"></span>
+    </div>
+    <div class="field">
+      <label for="cf-email">E-posta</label>
+      <input id="cf-email" name="email" type="email" autocomplete="email" required data-error="Geçerli bir e-posta adresi yazın." aria-describedby="cf-email-err" />
+      <span class="field__line" aria-hidden="true"></span>
+      <span class="field__error" id="cf-email-err" aria-live="polite"></span>
+    </div>
+  </div>
+
+  <div class="cf__row">
+    <div class="field">
+      <label for="cf-phone">Telefon <span class="muted">(isteğe bağlı)</span></label>
+      <input id="cf-phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" pattern="[0-9 +()\-]{7,}" data-error="Telefon numarasını kontrol edin." aria-describedby="cf-phone-err" />
+      <span class="field__line" aria-hidden="true"></span>
+      <span class="field__error" id="cf-phone-err" aria-live="polite"></span>
+    </div>
+    <fieldset class="field field--choice">
+      <legend>Proje türü</legend>
+      <div class="cf__chips">
+        {
+          ['Konut', 'Ticari', 'Diğer'].map((t, i) => (
+            <label class="chip">
+              <input type="radio" name="type" value={t} checked={i === 0} />
+              <span>{t}</span>
+            </label>
+          ))
+        }
+      </div>
+    </fieldset>
+  </div>
+
+  <div class="field">
+    <label for="cf-message">Mesajınız</label>
+    <textarea id="cf-message" name="message" rows="5" required minlength="10" data-error="Kısaca projenizden bahseder misiniz? (en az 10 karakter)" aria-describedby="cf-message-err"></textarea>
+    <span class="field__line" aria-hidden="true"></span>
+    <span class="field__error" id="cf-message-err" aria-live="polite"></span>
+  </div>
+
+  <div class="field field--check">
+    <label class="check">
+      <input type="checkbox" name="consent" value="evet" required data-error="Devam etmek için onay vermeniz gerekiyor." aria-describedby="cf-consent-err" />
+      <span class="small">
+        Kişisel verilerimin talebime dönüş yapılması amacıyla işlenmesine ilişkin{' '}
+        <a class="link" href="/gizlilik-politikasi#kvkk">aydınlatma metnini</a>{' '}okudum.
+      </span>
+    </label>
+    <span class="field__error" id="cf-consent-err" aria-live="polite"></span>
+  </div>
+
+  <div class="cf__hp" aria-hidden="true">
+    <label for="cf-website">Web siteniz</label>
+    <input id="cf-website" name="website" type="text" tabindex="-1" autocomplete="off" />
+  </div>
+
+  <div class="cf__submit">
+    <button type="submit" class="btn">
+      <span>Gönder</span>
+      <Arrow class="arrow--move" />
+    </button>
+    <p class="cf__status small" data-form-status role="status" aria-live="polite"></p>
+  </div>
+</form>
+
+<style>
+  .cf {
+    display: grid;
+    gap: var(--space-m);
+  }
+  .cf__row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-m) var(--col-gap);
+  }
+  .field {
+    position: relative;
+    display: grid;
+    gap: 0.35rem;
+    border: 0;
+    padding: 0;
+    min-width: 0;
+  }
+  .field label,
+  .field legend {
+    font-size: var(--fs-micro);
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    padding: 0;
+  }
+  .field input:not([type='radio'], [type='checkbox']),
+  .field textarea {
+    width: 100%;
+    padding: 0.6rem 0 0.7rem;
+    border: 0;
+    border-bottom: 1px solid var(--line);
+    border-radius: 0;
+    background: transparent;
+    font-family: var(--serif);
+    font-size: 1.35rem;
+    font-weight: 300;
+    line-height: 1.3;
+    outline: none;
+    resize: vertical;
+  }
+  .field textarea {
+    min-height: 8rem;
+  }
+  /* odakta çizgi soldan sağa dolar */
+  .field__line {
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: var(--ink);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform var(--dur-2) var(--ease);
+    pointer-events: none;
+  }
+  .field input + .field__line {
+    top: calc(100% - 1px - 1.35rem);
+  }
+  .field textarea + .field__line {
+    top: calc(100% - 1px - 1.35rem);
+  }
+  .field input:focus-visible + .field__line,
+  .field textarea:focus-visible + .field__line,
+  .field input:focus + .field__line,
+  .field textarea:focus + .field__line {
+    transform: scaleX(1);
+  }
+  .field [aria-invalid='true'] + .field__line {
+    background: var(--coral);
+    transform: scaleX(1);
+  }
+  .field__error {
+    min-height: 1rem;
+    font-size: 0.8rem;
+    color: #b8442f;
+  }
+
+  .cf__chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    padding-top: 0.6rem;
+  }
+  .field .chip {
+    position: relative;
+    cursor: pointer;
+    text-transform: none;
+    letter-spacing: normal;
+    font-weight: 400;
+    color: var(--ink);
+  }
+  .chip input {
+    position: absolute;
+    opacity: 0;
+    inset: 0;
+    cursor: pointer;
+  }
+  .chip span {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 0 1rem;
+    border: 1px solid var(--line);
+    font-size: var(--fs-small);
+    transition:
+      background-color var(--dur-1) var(--ease),
+      color var(--dur-1) var(--ease),
+      border-color var(--dur-1) var(--ease);
+  }
+  .chip input:checked + span {
+    background: var(--charcoal);
+    border-color: var(--charcoal);
+    color: var(--bone);
+  }
+  .chip input:focus-visible + span {
+    outline: 1.5px solid var(--ultra);
+    outline-offset: 3px;
+  }
+
+  .check {
+    display: flex;
+    gap: 0.85rem;
+    align-items: flex-start;
+    cursor: pointer;
+    text-transform: none !important;
+    letter-spacing: normal !important;
+    font-weight: 400 !important;
+    color: var(--ink) !important;
+  }
+  .check input {
+    appearance: none;
+    flex: none;
+    width: 1.25rem;
+    height: 1.25rem;
+    margin-top: 0.1rem;
+    border: 1px solid var(--ink-soft);
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+  }
+  .check input::after {
+    content: '';
+    width: 0.6rem;
+    height: 0.6rem;
+    background: var(--ultra);
+    transform: scale(0);
+    transition: transform var(--dur-1) var(--ease);
+  }
+  .check input:checked::after {
+    transform: scale(1);
+  }
+  .check input[aria-invalid='true'] {
+    border-color: var(--coral);
+  }
+
+  .cf__hp {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+  .cf__submit {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem 2rem;
+  }
+  .cf__submit .btn {
+    min-width: 14rem;
+  }
+  .cf__status:empty {
+    display: none;
+  }
+  @media (max-width: 700px) {
+    .cf,
+    .cf__row {
+      gap: var(--space-s);
+    }
+    .cf__row {
+      grid-template-columns: 1fr;
+    }
+    .cf__submit .btn {
+      width: 100%;
+    }
+  }
+</style>

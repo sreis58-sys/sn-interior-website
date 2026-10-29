@@ -1,0 +1,29 @@
+---
+/**
+ * Satır satır açılan başlık. Her satır overflow:hidden bir maskenin içinden yükselir.
+ * lines içinde basit HTML (ör. <em>) kullanılabilir.
+ */
+interface Props {
+  lines: string[];
+  as?: 'h1' | 'h2' | 'h3' | 'p' | 'div';
+  class?: string;
+  delay?: number;
+  reveal?: boolean;
+  id?: string;
+}
+const { lines, as: Tag = 'h2', class: cls = '', delay = 0, reveal = true, id } = Astro.props;
+---
+
+<Tag class={cls} id={id} data-reveal={reveal ? 'lines' : undefined} style={delay ? `--d:${delay}ms` : undefined}>
+  {
+    lines.map((l, i) => (
+      <>
+        <span class="line">
+          <span style={`--i:${i}`} set:html={l} />
+        </span>
+        {/* satırlar blok olsa da metin olarak kelimeler birleşmesin (kopyalama, ekran okuyucu) */}
+        {i < lines.length - 1 && ' '}
+      </>
+    ))
+  }
+</Tag>

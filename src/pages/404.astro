@@ -1,0 +1,60 @@
+---
+import Arrow from '../components/Arrow.astro';
+import Curve from '../components/Curve.astro';
+import Index from '../components/Index.astro';
+import Lines from '../components/Lines.astro';
+import Base from '../layouts/Base.astro';
+---
+
+<Base title="Sayfa bulunamadı" description="Aradığınız sayfa taşınmış ya da kaldırılmış olabilir." noindex>
+  <section class="nf grid">
+    <Curve class="nf__curve" mode="static" viewBox="0 0 1000 600" d="M-10 560 C 260 520, 360 160, 600 200 S 880 480, 1010 60" />
+    <Index no="404" label="Sayfa bulunamadı" class="nf__index" />
+    <Lines as="h1" class="display nf__title" lines={['Bu mekân', '<em>henüz boş.</em>']} />
+    <div class="nf__body">
+      <p class="muted">Aradığınız sayfa taşınmış ya da kaldırılmış olabilir.</p>
+      <a href="/" class="cta">
+        <span class="cta__circle"><Arrow /></span>
+        <span>Ana sayfaya dönün</span>
+      </a>
+      <a href="/projelerimiz" class="link small">Projelere göz atın <Arrow /></a>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .nf {
+    position: relative;
+    min-height: 80svh;
+    padding-top: calc(var(--header-h) + var(--space-l));
+    padding-bottom: var(--space-section);
+    row-gap: var(--space-m);
+    align-content: center;
+    overflow: clip;
+  }
+  .nf :global(.nf__curve) {
+    inset: 20% 0 0 0;
+    width: 100%;
+    height: 70%;
+    z-index: -1;
+  }
+  .nf :global(.nf__index),
+  .nf :global(.nf__title) {
+    grid-column: 1 / -1;
+  }
+  .nf :global(.nf__title em) {
+    font-style: italic;
+    font-weight: 200;
+  }
+  .nf__body {
+    grid-column: 7 / -1;
+    display: grid;
+    gap: var(--space-s);
+    justify-items: start;
+  }
+  @media (max-width: 860px) {
+    .nf__body {
+      grid-column: 1 / -1;
+    }
+  }
+</style>

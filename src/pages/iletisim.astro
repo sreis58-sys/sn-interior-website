@@ -1,0 +1,116 @@
+---
+import ContactForm from '../components/ContactForm.astro';
+import Index from '../components/Index.astro';
+import Lines from '../components/Lines.astro';
+import Base from '../layouts/Base.astro';
+import { site } from '../data/site';
+---
+
+<Base
+  title="İletişim"
+  description="Projeniz için Sulenur İç Mimarlık ile iletişime geçin. İlk görüşme ve keşif ücretsizdir. Serdivan, Sakarya."
+  footerCta={false}
+>
+  <section class="contact grid" aria-labelledby="contact-title">
+    <header class="contact__head">
+      <Index no="01" label="İletişim" />
+      <Lines as="h1" id="contact-title" class="h1" lines={['Birlikte', '<em>tasarlayalım.</em>']} />
+      <p class="lead muted contact__lead">
+        Yeni bir proje mi düşünüyorsunuz? İlk görüşme ve keşif ücretsizdir, bağlayıcılığı yoktur.
+      </p>
+    </header>
+
+    <address class="contact__info">
+      <div>
+        <p class="micro muted">Telefon</p>
+        <a class="contact__big link" href={site.phoneHref}>{site.phone}</a>
+      </div>
+      <div>
+        <p class="micro muted">E-posta</p>
+        <a class="contact__big contact__mail link" href={`mailto:${site.email}`}>{site.email}</a>
+      </div>
+      <div>
+        <p class="micro muted">WhatsApp</p>
+        <a class="contact__big link" href={site.whatsapp} target="_blank" rel="noopener">Mesaj gönderin</a>
+      </div>
+      <div>
+        <p class="micro muted">Stüdyo</p>
+        <p class="contact__big">{site.city}</p>
+        <p class="small muted">Ziyaret için lütfen önceden randevu alın.</p>
+      </div>
+    </address>
+
+    <div class="contact__form">
+      <h2 class="h4 contact__form-title">Projenizi kısaca anlatın</h2>
+      <ContactForm />
+    </div>
+  </section>
+</Base>
+
+<style>
+  .contact {
+    position: relative;
+    padding-top: calc(var(--header-h) + var(--space-l));
+    padding-bottom: var(--space-section);
+    row-gap: var(--space-l);
+    overflow: clip;
+  }
+  .contact__head {
+    grid-column: 1 / -1;
+    display: grid;
+    gap: var(--space-m);
+  }
+  .contact__head :global(em) {
+    font-style: italic;
+    font-weight: 200;
+  }
+  .contact__lead {
+    max-width: 30rem;
+  }
+  .contact__info {
+    grid-column: 1 / span 4;
+    font-style: normal;
+    display: grid;
+    gap: var(--space-m);
+    align-content: start;
+  }
+  .contact__info > div {
+    display: grid;
+    gap: 0.4rem;
+    justify-items: start;
+    padding-top: var(--space-s);
+    border-top: 1px solid var(--line);
+  }
+  .contact__big {
+    font-family: var(--serif);
+    font-size: var(--fs-h4);
+    font-weight: 300;
+    line-height: 1.2;
+  }
+  .contact__mail {
+    word-break: break-all;
+  }
+  .contact__form {
+    grid-column: 6 / -1;
+    display: grid;
+    gap: var(--space-m);
+  }
+  .contact__form-title {
+    padding-top: var(--space-s);
+    border-top: 1px solid var(--line);
+  }
+  @media (max-width: 1023px) {
+    .contact__info,
+    .contact__form {
+      grid-column: 1 / -1;
+    }
+    .contact__info {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  @media (max-width: 600px) {
+    .contact__info {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
